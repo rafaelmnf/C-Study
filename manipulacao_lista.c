@@ -87,8 +87,81 @@ int qntElementos(lista* inicio) {
     return qnt;
 }
 
-void inserirFim(lista* inicio) {
+lista* inserirFim(lista* inicio, int num) {
+    lista* novo = (lista*)malloc(sizeof(lista));
+    novo->info = num;
+    novo->prox = NULL;
 
+    if (inicio == NULL) {
+        return novo;
+    }
+
+    lista* aux = inicio;
+    while (aux->prox != NULL) {
+        aux = aux->prox;
+    }
+    aux->prox = novo;
+    return inicio;
+}
+
+void retirarFim(lista* inicio) {
+    if (inicio == NULL) {
+        // lista vazia, nada a remover
+        return;
+    }
+    if (inicio->prox == NULL) {
+        // se só tiver 1
+        free(inicio);
+        return;
+    }
+
+    lista* aux = inicio;
+    while (aux->prox->prox != NULL) {
+        aux = aux->prox;  // para no penúltimo
+    }
+    free(aux->prox);   // libera o último
+    aux->prox = NULL;  // penúltimo vira último
+}
+
+int qntImpar(lista* inicio) {
+    int qnt = 0;
+    while (inicio != NULL) {
+        if(inicio->info % 2 != 0) {
+            qnt++;
+        }
+        inicio = inicio->prox;
+    }
+    return qnt;
+}
+
+void somaElementos(lista* inicio) {
+    int soma = 0;
+    while(inicio != NULL) {
+        soma += inicio->info;
+        inicio = inicio->prox;
+    }
+    printf("Soma dos elementos: %d\n", soma);
+}
+    
+lista* uniaoLista(lista* inicio1, lista* inicio2, lista* inicio3) {
+    // percorre a primeira lista
+    while (inicio1 != NULL) {
+        // se não for repetido
+        if (!buscaElemento(inicio3, inicio1->info)) {
+            inicio3 = inserirFim(inicio3, inicio1->info);
+        }
+        inicio1 = inicio1->prox;
+    }
+
+    // percorre a segunda lista
+    while (inicio2 != NULL) {
+        if (!buscaElemento(inicio3, inicio2->info)) {
+            inicio3 = inserirFim(inicio3, inicio2->info);
+        }
+        inicio2 = inicio2->prox;
+    }
+
+    return inicio3;
 }
 
 int main() {
@@ -103,7 +176,8 @@ int main() {
     printf("8. Retirar no fim da lista\n");
     printf("9. Quantidade de numeros impares\n");
     printf("10. Unir listas\n");
-    printf("11. Sair do Programa\n\n");
+    printf("11. Somar elemento de uma lista\n");
+    printf("12. Sair do Programa\n\n");
 
     lista* inicio;
     inicio = inicializar();
@@ -116,10 +190,10 @@ int main() {
         switch (comando)
         {
         case 1:
-            int inserido;
+            int numComeco;
             printf("Digite o numero a ser inserido: ");
-            scanf("%d", &inserido);
-            inicio = inserirComeco(inicio, inserido);
+            scanf("%d", &numComeco);
+            inicio = inserirComeco(inicio, numComeco);
             break;
 
         case 2:
@@ -133,13 +207,13 @@ int main() {
 
         case 4:
             int elemento;
-            printf("Elemento a ser procurado na lista:");
-            scanf("%d", elemento);
+            printf("Elemento a ser procurado na lista: ");
+            scanf("%d", &elemento);
             int verifica = buscaElemento(inicio, elemento);
             if (verifica == 1) {
-                printf("O numero %d existe na lista", elemento);
+                printf("O numero %d existe na lista\n", elemento);
             } else {
-                printf("Numero nao encontrado");
+                printf("Numero nao encontrado\n");
             }
             break;
         
@@ -153,13 +227,38 @@ int main() {
             break;
         case 6:
             int qnt = qntElementos(inicio);
-            printf("Sao %d elementos", qnt);
+            printf("Sao %d elementos\n", qnt);
             break;
         case 7:
+            int numFim;
+            printf("Numero a ser inserido no final: ");
+            scanf("%d", &numFim);
+            inicio = inserirFim(inicio, numFim);
+            break;
         case 8:
+            retirarFim(inicio);
+            break;
         case 9:
+            int impar = qntImpar(inicio);
+            printf("Sao %d numeros impares\n", impar);
+            break;
         case 10:
+            lista *inicio2, *inicio3;
+            inicio2 = inicializar();
+            inicio3 = inicializar();
+            inicio2 = inserirComeco(inicio2, 1);
+            inicio2 = inserirComeco(inicio2, 4);
+            inicio2 = inserirComeco(inicio2, 12);
+            inicio2 = inserirComeco(inicio2, 3);
+            inicio3 = uniaoLista(inicio, inicio2, inicio3);
+            impressaoLista(inicio3);
+            printf("\n");
+            break;
         case 11:
+            somaElementos(inicio);
+            break;
+        case 12:
+            exit(0);
         default:
             printf("\nDigite corretamente\n");
             break;
