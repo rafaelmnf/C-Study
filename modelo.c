@@ -3,7 +3,7 @@
 #include <stdio.h> 
 //biblioteca de funções de entrada e saida
 #include <locale.h>
-/*Outras bibliotecas :
+/*Outras bibliotecas:
 math.h -> funções matemáticas
 time.h -> manipulação de dados em Data e Hora
 string.h -> manipulação de cadeia de char
